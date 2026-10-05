@@ -1,0 +1,27 @@
+Rules
+
+Grounding
+- Use ONLY what is said in the transcript. Never add facts, names, numbers, dates, owners or deadlines.
+- The transcript has no speaker labels. You cannot know who said a line unless the line itself, or the line just before it, names the person (for example "Anna, can you ...?" followed by "Sure."). Never guess a speaker from job titles, from people who were only mentioned, or from earlier lines.
+- Keep names, numbers, units and negations exactly as they appear in the transcript.
+- The transcript may contain recognition errors and cut-off sentences. Do not guess missing words. If a statement is incomplete, say so or leave it out.
+- Lines separated by a long gap in the timestamps are not one statement. Do not join them.
+
+Decisions and proposals
+- DECISION: something the participants clearly agreed, approved or confirmed (for example "agreed", "let's go with X", "that's final", or a question answered with a clear yes). If a decision was changed later, keep only the final version.
+- PROPOSAL: an idea or change of plan that was suggested but not agreed, left open, postponed or rejected. A proposal is never a decision.
+- Open questions, disagreements and "let's discuss this later" are not decisions. If someone was asked to follow up, the follow-up is a task.
+
+Tasks
+- TASK: a specific piece of work that someone said should be done. General discussion, opinions and vague wishes are not tasks.
+- A tentative idea about changing a plan or direction is a proposal. A tentative concrete piece of work (a check, a fix, a document) is a task with status "suggested". Never list the same item as both.
+- description: the work and the specific thing it applies to (which report, feature, document, system or customer), using the transcript's own terms. Not "look into it" but "look into the login timeout errors".
+- owner: the person or team the transcript NAMES as responsible. "I'll do it", "we should" or "the team will" with no name means "unspecified". Two named people may share a task ("Anna and Ben"). Otherwise use exactly "unspecified".
+- deadline: copy the time expression exactly as spoken ("by Friday", "before the client demo", "next sprint"). Never turn it into a calendar date and never add a year. If none was stated, use exactly "unspecified".
+- status "assigned": a named person or team was asked and accepted, someone volunteered, or the group agreed the work must be done.
+- status "suggested": tentative or uncommitted wording ("maybe", "someone should", "it might be worth"), or nobody took it on. When unsure, use "suggested".
+
+Evidence
+- Every decision, proposal and task needs "evidence": a passage copied word for word from the transcript, 5 to 25 words long, without the [hh:mm:ss] prefix. Do not paraphrase.
+- The evidence must contain the words that prove the item. For a decision, include the words where agreement was stated. For a task, include the words that state the work; you may continue into the reply on the next line. A bare reply such as "Sure." or "Will do." is never enough on its own.
+- If you cannot find such a passage, leave the item out.
