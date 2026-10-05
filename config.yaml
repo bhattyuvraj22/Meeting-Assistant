@@ -1,0 +1,39 @@
+# Pick a profile here, or choose one in the app dropdown.
+# MODEL NAMES ARE STARTING POINTS: verify them (Groq: console.groq.com/docs/models, Ollama: ollama.com/library)
+# Typos in this file are caught at startup (see pipeline/settings.py).
+profile: api
+
+settings:
+  refine_max_words: 700          # size of each chunk sent to LLM 1
+  evidence_threshold: 85         # 0-100, how closely a task/decision quote must match the transcript
+  deadline_threshold: 85         # 0-100, how closely a deadline must match what was said
+  min_audio_seconds: 2
+  min_words_per_minute: 20       # below this the app warns "mostly silence or music"
+  minutes_part_words: 2500       # transcripts longer than this are split for LLM 2 (map-reduce)
+  minutes_part_overlap_segments: 3
+  dedupe_threshold: 90           # 0-100, text similarity above which two items count as duplicates (high on purpose)
+  max_upload_mb: 200
+  keep_runs: 20                  # old run folders in outputs/ are deleted beyond this number
+  # hedge_phrases: [maybe, perhaps, might, ...]   # confirm_phrases: ["agreed", "decided", "confirmed", ...] 
+
+profiles:
+  # Free hosted models (Groq). Needs GROQ_API_KEY in .env
+  api:
+    stt:  {backend: api, base_url: "https://api.groq.com/openai/v1", api_key_env: GROQ_API_KEY_STT, model: whisper-large-v3}
+    # extra_body is passed to the provider as-is. reasoning_effort works for gpt-oss models on Groq;
+    # remove it if you switch to a model that does not support it (the app also drops it automatically on error).
+    llm1: {base_url: "https://api.groq.com/openai/v1", api_key_env: GROQ_API_KEY_LLM1, model: "openai/gpt-oss-20b", temperature: 0.0, extra_body: {reasoning_effort: low}}
+    llm2: {base_url: "https://api.groq.com/openai/v1", api_key_env: GROQ_API_KEY_LLM2, model: "openai/gpt-oss-120b", temperature: 0.1, extra_body: {reasoning_effort: medium}}  # or a Qwen model from Groq's list
+
+  # Everything on your machine. Needs Ollama + `pip install -r requirements-local.txt`
+  # Start Ollama with OLLAMA_CONTEXT_LENGTH=32768 so long transcripts are not cut off.
+  local:
+    stt:  {backend: local, model: large-v3, device: auto, compute_type: auto}
+    llm1: {base_url: "http://localhost:11434/v1", model: "qwen3:8b", temperature: 0.0}
+    llm2: {base_url: "http://localhost:11434/v1", model: "qwen3:14b", temperature: 0.1}  # 24GB GPU: try a 27B model (verify tag)
+
+  # Weak laptop / CPU only (slow, lower quality)
+  cpu-lite:
+    stt:  {backend: local, model: small, device: cpu, compute_type: int8}
+    llm1: {base_url: "http://localhost:11434/v1", model: "qwen3:4b", temperature: 0.0}
+    llm2: {base_url: "http://localhost:11434/v1", model: "llama3.2:3b", temperature: 0.1}
