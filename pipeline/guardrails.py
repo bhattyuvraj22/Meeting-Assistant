@@ -1,8 +1,17 @@
 """Honesty checks on the final record. Runs after LLM 2, in a fixed order, in every profile."""
 from . import merge
-from .checks import (deadline_supported, find_quote, is_hedged, locate, norm, owner_supported,
-                     same_meaning, unsupported_facts)
+from .checks import (
+    deadline_supported,
+    find_quote,
+    is_hedged,
+    locate,
+    norm,
+    owner_supported,
+    same_meaning,
+    unsupported_facts,
+)
 from .schema import UNSPECIFIED, Proposal
+
 
 # The located segment and its neighbours. An owner or deadline must be stated HERE, not just somewhere in the meeting.
 def _context(transcript, seg, before=2, after=2):

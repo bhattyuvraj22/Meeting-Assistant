@@ -1,7 +1,7 @@
 """Guardrails that keep the models honest. These run in every profile."""
 import re
 
-from rapidfuzz import fuzz          # gives a 0 to 100 similarity score between two texts.
+from rapidfuzz import fuzz  # gives a 0 to 100 similarity score between two texts.
 
 NEGATIONS = {"not", "no", "never", "none", "nothing", "neither", "nor", "cannot", "without",
              "can't", "won't", "don't", "didn't", "isn't", "aren't", "wasn't", "weren't",
@@ -63,7 +63,7 @@ def refine_ok(raw, new, lo=0.85, hi=1.15):
 
 # Whole-word, case-insensitive search for a phrase. Returns the match or None.
 def _find_phrase(text, phrase):
-    return re.search(r"(?<!\w)" + re.escape(phrase) + r"(?!\w)", text, flags=re.I)
+    return re.search(r"(?<!\w)" + re.escape(phrase) + r"(?!\w)", text, flags=re.IGNORECASE)
 
 # True for words that look like an ordinary name: 'Rahul', 'Priya'. False for technical terms with inner capitals or digits: 'KuboFlow', 'PosterSQL', 'GPT4'.
 def _plain_name(word):

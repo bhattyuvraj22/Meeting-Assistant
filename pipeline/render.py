@@ -1,6 +1,7 @@
 """Human-readable outputs. All are generated from the same Record, so they always match the JSON."""
 import re
 
+
 # Make text safe inside a Markdown table cell.
 def _cell(text):
     return str(text).replace("|", "\\|").replace("\r", " ").replace("\n", " ").strip()

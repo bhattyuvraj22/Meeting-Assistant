@@ -1,5 +1,10 @@
-from pipeline.checks import (deadline_supported, is_hedged, owner_supported, refine_ok,
-                             validate_correction)
+from pipeline.checks import (
+    deadline_supported,
+    is_hedged,
+    owner_supported,
+    refine_ok,
+    validate_correction,
+)
 from pipeline.schema import Task
 from pipeline.settings import DEFAULT_HEDGES
 from pipeline.transcript import Transcript

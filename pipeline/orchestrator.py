@@ -9,7 +9,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from . import audio, minutes, refine, render, stt, download
+from . import audio, download, minutes, refine, render, stt
 from .errors import ConfigError, PipelineError
 from .llm_client import LLM
 from .logging_setup import close_run_logger, get_run_logger

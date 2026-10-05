@@ -1,8 +1,9 @@
 """Combine results from several parts of a long meeting and remove duplicates."""
-from rapidfuzz import fuzz                                     # for character-based similarity
+from rapidfuzz import fuzz  # for character-based similarity
 
 from .checks import negation_count, norm, numbers
 from .schema import UNSPECIFIED, MinutesSection, PartNotes
+
 
 # Texts that differ in a number or a negation are never duplicates.
 def _same_meaning_basics(a, b):

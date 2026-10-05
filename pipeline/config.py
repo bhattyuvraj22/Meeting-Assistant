@@ -1,11 +1,11 @@
-from pathlib import Path                                # builds file paths.
+from pathlib import Path  # builds file paths.
 
-import yaml                                             # to read the YAML file
-from dotenv import load_dotenv                          # load API keys from .env file
-from pydantic import ValidationError                    # to catch class , data mismatch erros
+import yaml  # to read the YAML file
+from dotenv import load_dotenv  # load API keys from .env file
+from pydantic import ValidationError  # to catch class , data mismatch erros
 
-from .errors import ConfigError                         
-from .settings import Profile, Settings                 
+from .errors import ConfigError
+from .settings import Profile, Settings
 
 ROOT = Path(__file__).resolve().parent.parent           
 CONFIG_PATH = ROOT / "config.yaml"

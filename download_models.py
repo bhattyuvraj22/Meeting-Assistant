@@ -2,6 +2,7 @@
 import argparse
 import shutil
 import subprocess
+
 from pipeline.config import load_config
 
 ap = argparse.ArgumentParser()

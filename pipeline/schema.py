@@ -1,6 +1,13 @@
 """The shape of the final record. Every profile must produce this (validated by Pydantic)."""
-from typing import Literal                                                                  # restrict a field to a exact values
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator         # write own cleanup/check for a field.
+from typing import Literal  # restrict a field to a exact values
+
+from pydantic import (  # write own cleanup/check for a field.
+    BaseModel,
+    ConfigDict,
+    Field,
+    ValidationError,
+    field_validator,
+)
 
 UNSPECIFIED = "unspecified"
 _EMPTY = {"", "none", "null", "n/a", "na", "tbd", "unknown", "not specified", "not stated", "unspecified"}

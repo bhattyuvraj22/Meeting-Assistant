@@ -1,9 +1,9 @@
-import json                       # json to parses ffprobe's output
-import shutil                     # to check whether a program is exist on system/installed (i.e.,ffmpeg)
-import subprocess                 # to run external commands (i.e., ffmpeg, ffprobe)
-from pathlib import Path          # pathlib is object-oriented way to handle file paths
+import json  # json to parses ffprobe's output
+import shutil  # to check whether a program is exist on system/installed (i.e.,ffmpeg)
+import subprocess  # to run external commands (i.e., ffmpeg, ffprobe)
+from pathlib import Path  # pathlib is object-oriented way to handle file paths
 
-from .errors import AudioError    
+from .errors import AudioError
 
 ALLOWED = {".wav", ".mp3", ".m4a", ".flac", ".ogg", ".opus", ".aac", ".wma", ".mp4", ".webm", ".mkv"}
 MAX_API_BYTES = 24 * 1024 * 1024  # Groq free tier upload cap is 25 MB , vary for other llm

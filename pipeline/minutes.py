@@ -5,11 +5,11 @@ import json
 from pydantic import ValidationError
 
 from . import guardrails, merge
+from .checks import is_hedged, quote_supported
 from .errors import PipelineError, RequestTooLargeError
 from .jsonutil import extract_json
 from .schema import Record, build_part_notes, build_record, build_summary_minutes
 from .transcript import Transcript
-from .checks import is_hedged, quote_supported
 
 MIN_PART_WORDS = 600
 

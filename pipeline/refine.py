@@ -1,9 +1,10 @@
 """Stage 2 (LLM 1): fix mis-heard technical terms. LLM 1 only LISTS corrections; code checks and applies them."""
-import re                               # apply corrections
+import re  # apply corrections
 
 from .checks import apply_correction, refine_ok, validate_correction
 from .jsonutil import extract_json
 from .transcript import Transcript
+
 
 # splits it wherever it finds a comma, a semicolon or a new line and form a set of lower-cased terms. Empty terms are ignored.
 def _glossary_terms(glossary):

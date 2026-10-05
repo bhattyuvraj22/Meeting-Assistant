@@ -12,7 +12,7 @@ def download_audio(url, work_dir, max_seconds=MAX_LINK_SECONDS):
     if urlparse(url).scheme not in ("http", "https"):
         raise AudioError("The link must start with http:// or https://")
     try:
-        import yt_dlp                    # imported here so the app still runs without it
+        import yt_dlp     # imported here so the app still runs without it
     except ImportError:
         raise AudioError("Downloading from links needs yt-dlp. Run: pip install yt-dlp")
 

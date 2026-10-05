@@ -1,6 +1,6 @@
 """Run the pipeline without the UI:  python cli.py meeting.mp3 --profile api"""
-import argparse              # read terminal arguments
-import sys                   # sys.stderr for error output, sys.exit for the exit code
+import argparse  # read terminal arguments
+import sys  # sys.stderr for error output, sys.exit for the exit code
 
 from pipeline.config import ROOT, load_config
 from pipeline.errors import PipelineError

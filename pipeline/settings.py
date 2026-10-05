@@ -1,5 +1,5 @@
 """Typed, validated configuration. A typo in config.yaml fails at startup with a clear message."""
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -22,9 +22,9 @@ class SttCfg(BaseModel):
     model_config = ConfigDict(extra="forbid")
     backend: Literal["api", "local"]
     model: str
-    base_url: Optional[str] = None       # api backend only
-    api_key_env: Optional[str] = None    # name of the env var that holds the key
-    language: Optional[str] = None       # None = auto-detect (the app warns when it is not English)
+    base_url: str | None = None       # api backend only
+    api_key_env: str | None = None    # name of the env var that holds the key
+    language: str | None = None       # None = auto-detect (the app warns when it is not English)
     device: str = "auto"                 # local backend only
     compute_type: str = "auto"           # local backend only
 
@@ -33,9 +33,9 @@ class LlmCfg(BaseModel):
     model_config = ConfigDict(extra="forbid")
     base_url: str
     model: str
-    api_key_env: Optional[str] = None
+    api_key_env: str | None = None
     temperature: float = 0.0
-    max_tokens: Optional[int] = None
+    max_tokens: int | None = None
     timeout: int = 300
     extra_body: dict = Field(default_factory=dict)   # passed to the provider as-is (e.g. reasoning_effort)
 

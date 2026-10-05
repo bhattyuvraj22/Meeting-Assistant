@@ -1,18 +1,26 @@
 """One wrapper for every LLM: local (Ollama/vLLM) or hosted API. Only the config differs."""
-import os                   # read api key from .env file
-import re                   # text cleanup
-import time                 # for sleep between retries.
+import os  # read api key from .env file
+import re  # text cleanup
+import time  # for sleep between retries.
 
-from openai import (APIConnectionError, APIStatusError, AuthenticationError, BadRequestError,
-                    InternalServerError, OpenAI, RateLimitError)                # error types for each failure kind
+from openai import (
+    APIConnectionError,
+    APIStatusError,
+    AuthenticationError,
+    BadRequestError,
+    InternalServerError,  # error types for each failure kind
+    OpenAI,
+    RateLimitError,
+)
 
 from .errors import ConfigError, PipelineError, ProviderError, RequestTooLargeError
+
 
 # Remove <think>...</think> blocks, and an unclosed <think> block (a cut-off reply).
 # Reasoning models like Qwen3 write their thinking in those tags
 def strip_reasoning(text):
-    text = re.sub(r"<think>.*?</think>", "", text or "", flags=re.S)
-    text = re.sub(r"<think>.*\Z", "", text, flags=re.S)
+    text = re.sub(r"<think>.*?</think>", "", text or "", flags=re.DOTALL)
+    text = re.sub(r"<think>.*\Z", "", text, flags=re.DOTALL)
     return text.strip()
 
 # reads the retry-after header from a rate-limit response (how many seconds to wait)

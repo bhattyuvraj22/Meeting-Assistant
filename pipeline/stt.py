@@ -1,11 +1,14 @@
 """Stage 1: speech-to-text. Two backends behind one function. Returns timestamped segments + language."""
-import os                                                           # read the api key from env
-import re                                                           # split text into sentences
+import os  # read the api key from env
+import re  # split text into sentences
 
-from . import audio                                                 # gives access to audio.split_if_large
-from .errors import ConfigError, PipelineError                      # custom error for setup probem or faster-whisper not being installed
-from .llm_client import call_with_retries                           # retries the API call if the network fails
-from .transcript import Segment, SttResult, Transcript              # build these dataclasses 
+from . import audio  # gives access to audio.split_if_large
+from .errors import (  # custom error for setup probem or faster-whisper not being installed
+    ConfigError,
+    PipelineError,
+)
+from .llm_client import call_with_retries  # retries the API call if the network fails
+from .transcript import Segment, SttResult, Transcript  # build these dataclasses 
 
 _local_models = {}
 
