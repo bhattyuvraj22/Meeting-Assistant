@@ -195,24 +195,7 @@ Each run writes `outputs/<date>_<time>_<id>/`. The Markdown and JSON agree by co
 
 ---
 
-## 8. Example from a real run
-
-A 1.5-minute test meeting (`outputs/20261006_132507_29a102`).
-
-**Refinement:** `cuba flow` became `Kubeflow`, `POSKR SQL` became `PostgreSQL` (three lines), and `rubies` became `rupees`. Numbers, names and negations were untouched.
-
-| Result | Item | Why |
-| --- | --- | --- |
-| Decision | Ship version 2.3 on 14 November | Quote: "it's agreed, we ship version 2.3 on the 14th of november" |
-| Decision | Use PostgreSQL 16 (changed from 14) | Only the final version is kept |
-| Proposal | Move staging to AWS | "Maybe we should...", then parked for budget |
-| Task | Update OAuth docs, owner **Priya**, "by friday" | Priya is named just before "sure, i'll do that" |
-| Task | Investigate slow dashboard, owner **unspecified**, "this week" | Rahul was only mentioned, not the speaker |
-| Task | Send cost report, owner **Vikram**, "end of next sprint" | Named and accepted |
-
----
-
-## 9. Reliability, configuration and deployment
+## 8. Reliability, configuration and deployment
 
 - **Retries:** rate limits wait for `Retry-After` (else 3 × 2ⁿ s, max 60), connection and 5xx errors wait 2 × 2ⁿ s (max 30), up to 5 attempts. A wrong API key stops immediately and names the `.env` variable. If a provider rejects JSON mode or `reasoning_effort`, the option is dropped and a warning is shown.
 - **Errors:** `AudioError`, `ConfigError`, `RequestTooLargeError`, `ProviderError`, all under `PipelineError`. Each gives a plain message.
@@ -227,11 +210,9 @@ A 1.5-minute test meeting (`outputs/20261006_132507_29a102`).
 
 **Key settings** (`config.yaml`, unknown keys are rejected at startup): `refine_max_words` 700, `evidence_threshold` 85, `minutes_part_words` 2500, `dedupe_threshold` 90, `min_words_per_minute` 20, `keep_runs` 20.
 
-**Run it:** `docker compose --profile api up --build` (API) or `docker compose --profile local up -d --build` (local), then open `http://localhost:7860`. Without Docker: `python app.py`, or `python cli.py meeting.mp3` for the command line. The Docker image runs as a non-root user. CI runs `pytest` on every push, and the tests need no API key.
-
 ---
 
-## 10. What each file does
+## 9. What each file does
 
 | File | Use |
 | --- | --- |
@@ -264,22 +245,7 @@ A 1.5-minute test meeting (`outputs/20261006_132507_29a102`).
 
 ---
 
-## 11. Measured results
-
-Four saved runs (API profile). For links, the audio stage includes the download.
-
-| Audio | Words | Speech-to-text | Total | LLM 1 / LLM 2 calls | Decisions / proposals / tasks |
-| --- | --- | --- | --- | --- | --- |
-| 1.5 min (upload) | 231 | 19.5 s | 66 s | 1 / 1 | 3 / 1 / 4 |
-| 1.6 min (link) | 383 | 3.4 s | 22 s | 1 / 1 | 1 / 0 / 2 |
-| 6.2 min (link) | 994 | 7.5 s | 112 s | 2 / 2 | 3 / 2 / 1 |
-| 42.7 min (link) | 7,193 | 28.4 s | 492 s | 10 / 9 | 7 / 17 / 5 |
-
-The 42.7-minute recording was transcribed about 90 times faster than real time. On that run the provider rejected one large request, and the part size was halved to 1,250 words automatically.
-
----
-
-## 12. Limits and privacy
+## 10. Limits and privacy
 
 - **English only.** Other languages trigger a warning.
 - **No speaker labels.** "I'll do it" with no name nearby gives owner `unspecified` on purpose. This favours precision, because crediting the wrong person is worse than leaving the owner blank.
