@@ -1,5 +1,9 @@
+# Mode 1 (API):   docker compose --profile api up --build
+# Mode 2 (local): docker compose --profile local up -d --build
 services:
+  # ---- Mode 1: cloud models on Groq (needs GROQ_API_KEY_* in .env)
   app:
+    profiles: ["api"]
     build: .
     ports:
       - "7860:7860"
@@ -7,3 +11,40 @@ services:
     volumes:
       - ./outputs:/app/outputs
     restart: unless-stopped
+
+  # ---- Mode 2: everything on your machine (faster-whisper + Ollama), no API key
+  app-local:
+    profiles: ["local"]
+    build:
+      context: .
+      args:
+        WITH_LOCAL: "1"
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./outputs:/app/outputs
+      - models:/app/models
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  ollama:
+    profiles: ["local"]
+    image: ollama/ollama:latest
+    environment:
+      OLLAMA_CONTEXT_LENGTH: "32768"   # long transcripts are cut off silently with the default
+    volumes:
+      - ollama:/root/.ollama
+    # NVIDIA GPU on Linux (needs the NVIDIA Container Toolkit): remove the # from the next 6 lines
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  models:
+  ollama:
