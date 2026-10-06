@@ -14,7 +14,7 @@ settings:
   dedupe_threshold: 90           # 0-100, text similarity above which two items count as duplicates (high on purpose)
   max_upload_mb: 200
   keep_runs: 20                  # old run folders in outputs/ are deleted beyond this number
-  # hedge_phrases: [maybe, perhaps, might, ...]   # confirm_phrases: ["agreed", "decided", "confirmed", ...] 
+  # hedge_phrases: [maybe, perhaps, might, ...]   # optional: words that make a task "suggested"
 
 profiles:
   # Free hosted models (Groq). Needs GROQ_API_KEY in .env
@@ -29,8 +29,21 @@ profiles:
   # Start Ollama with OLLAMA_CONTEXT_LENGTH=32768 so long transcripts are not cut off.
   local:
     stt:  {backend: local, model: large-v3, device: auto, compute_type: auto}
-    llm1: {base_url: "http://localhost:11434/v1", model: "qwen3:8b", temperature: 0.0}
+    llm1: {base_url: "http://localhost:11434/v1", model: "gpt-oss:20b", temperature: 0.0}
     llm2: {base_url: "http://localhost:11434/v1", model: "qwen3:14b", temperature: 0.1}  # 24GB GPU: try a 27B model (verify tag)
+
+  # Local mode INSIDE Docker (docker compose --profile local up). Ollama runs as the `ollama` service, so the
+  # address is http://ollama:11434, not localhost. Whisper runs on CPU in the container; timeout is long for that reason.
+  local-docker:
+    stt:  {backend: local, model: large-v3, device: cpu, compute_type: int8}
+    llm1: {base_url: "http://ollama:11434/v1", model: "gpt-oss:20b", temperature: 0.0, timeout: 900}
+    llm2: {base_url: "http://ollama:11434/v1", model: "qwen3:14b", temperature: 0.1, timeout: 900}
+
+  # Lite local mode INSIDE Docker: small models for laptops with ~8 GB RAM and no GPU (lower quality).
+  cpu-lite-docker:
+    stt:  {backend: local, model: small, device: cpu, compute_type: int8}
+    llm1: {base_url: "http://ollama:11434/v1", model: "qwen3:4b", temperature: 0.0, timeout: 900}
+    llm2: {base_url: "http://ollama:11434/v1", model: "llama3.2:3b", temperature: 0.1, timeout: 900}
 
   # Weak laptop / CPU only (slow, lower quality)
   cpu-lite:
