@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 
 def _is_local(url):
-    return "localhost" in url or "127.0.0.1" in url
+    return "localhost" in url or "127.0.0.1" in url or "//ollama:" in url   # "ollama" = docker-compose service nam
 
 # checks/asks which models are downloaded in a local Ollama instance. Returns a set of model names, or raises an exception if Ollama is not running.
 def _ollama_models(base_url):
