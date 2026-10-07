@@ -26,8 +26,9 @@ def _call_json(llm, system, user, validate, label="minutes"):
         try:
             return validate(extract_json(reply))
         except (ValueError, ValidationError) as e:
-            err = str(e)[:400]
-    raise PipelineError(f"The {label} model did not return valid JSON: {err}")
+            err = str(e)[:200]
+    debug = f"{err} | label={label} | reply starts: {reply[:200]!r} | ends: {reply[-100:]!r}"
+    raise PipelineError(f"The {label} model did not return valid JSON: {debug}")
 
 # Split the transcript into parts, send it with the extract prompt and validate it as PartNotes,
 # Merge all the parts' results with merge.merge_parts.
@@ -62,14 +63,14 @@ def _map_reduce(transcript, llm, prompts, settings, warnings):
     safe_decisions = [d.decision for d in merged.decisions
                       if quote_supported(d.evidence, plain, settings.evidence_threshold)
                       and not is_hedged(d.evidence, settings.hedge_phrases, settings.confirm_phrases)]
-    payload = {"notes": [{"topic": s.topic, "points": s.points} for s in merged.notes],
-               "decisions": safe_decisions}
+    payload = {"topics": [{"topic": s.topic, "points": s.points[:2]} for s in merged.notes],
+           "decisions": safe_decisions}
     sm, w = _call_json(llm, prompts["reduce"], json.dumps(payload, ensure_ascii=False),
                        build_summary_minutes, "summary")
     warnings += w
     # decisions / proposals / tasks come from the code merge, NOT rewritten by the model
-    return Record(summary=sm.summary, minutes=sm.minutes, decisions=merged.decisions,
-                  proposals=merged.proposals, tasks=merged.tasks)
+    return Record(summary=sm.summary, minutes=merged.notes, decisions=merged.decisions,
+              proposals=merged.proposals, tasks=merged.tasks)
 
 # Generator: yields ("progress", message) and finally ("result", (record, warnings)), prompts = {"single": ..., "extract": ..., "reduce": ...}
 def generate_iter(transcript, llm, prompts, settings):
