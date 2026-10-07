@@ -10,7 +10,7 @@ Turns an English meeting recording into a raw transcript, a refined transcript, 
 | --- | --- | --- | --- | --- |
 | **1. Speech-to-text** | `whisper-large-v3` on Groq | Transcribe speech with timestamps | 16 kHz mono mp3 and optional domain terms | Timed segments and language |
 | **2. Refinement (LLM 1)** | `openai/gpt-oss-20b`, temperature 0, effort low | Find mis-heard technical terms and **list** corrections | Numbered lines `[L12] text` | JSON list of corrections |
-| **3. Documentation (LLM 2)** | `openai/gpt-oss-120b`, temperature 0.1, effort medium | Write summary, minutes, decisions, proposals, tasks | Refined transcript with timestamps | JSON record |
+| **3. Documentation (LLM 2)** | `openai/gpt-oss-120b`, temperature 0.1, effort low | Write summary, minutes, decisions, proposals, tasks | Refined transcript with timestamps | JSON record |
 
 **Local equivalents** (same code, only `config.yaml` changes, no API key): faster-whisper `large-v3`, Ollama `gpt-oss:20b` and `qwen3:14b`. A Lite option uses `small`, `qwen3:4b` and `llama3.2:3b`.
 
@@ -47,7 +47,7 @@ flowchart TD
 | --- | --- |
 | Speech-to-text to LLM 1 | A `Transcript` of segments, each with a stable id and timestamp, shown as `[L12] text` plus an optional topic line |
 | LLM 1 to code | JSON only: `{"corrections": [{"line": 12, "from": "cube flow", "to": "Kubeflow"}]}`. The model never returns transcript text |
-| Code to LLM 2 | The refined transcript, same ids and timestamps, as `[00:03:12] text` inside `<transcript>` tags |
+| Code to LLM 2 | The refined transcript with a `[hh:mm:ss]` marker about every 30 seconds, inside `<transcript>` tags |
 | LLM 2 to code | A JSON record, validated by Pydantic, then corrected by the guardrails |
 
 `orchestrator.py` runs all stages in one generator and yields a progress event after each step, so the interface shows live status. On failure it names the stage and keeps every file already written.
@@ -118,6 +118,8 @@ flowchart TD
 | Name-swap guard: a plain name mid-line cannot become a dissimilar name (similarity under 70) unless it is in the glossary | People cannot be swapped for each other |
 | `refine_ok` on the whole edited line: same numbers and negations, length within 15% | Final safety net. Failing lines revert to raw |
 
+**Extra safeguards:** a deterministic step repairs dropped apostrophes ("haven t" to "haven't") before LLM 1 runs. If the model gives a wrong line number, the code looks for the phrase on nearby lines in the same part and gives up if it isn't there. Risky corrections (numbers, negations, person names, or a model-unsure change to a term found nowhere else) are not applied. They are listed as "Suggested (not applied)" warnings for a person to accept.
+
 **Consistency pass:** LLMs often fix a term once and miss its repeats, so each accepted correction is applied, and re-validated, on every other line with the same mis-heard words.
 
 ---
@@ -132,7 +134,7 @@ flowchart TD
     B -->|"no"| C["LLM 2<br/>one call"]
     B -->|"yes"| D["LLM 2 per part<br/>3 segments overlap"]
     D --> E["Code merges parts<br/>and removes duplicates"]
-    E --> F["LLM 2<br/>summary and topics only"]
+    E --> F["LLM 2<br/>summary only"]
     C --> G["Pydantic validation"]
     F --> G
     G --> H["Guardrails"]
@@ -143,7 +145,7 @@ flowchart TD
     class A,E,G,H code
 ```
 
-- **Long meetings:** decisions, proposals and tasks come from the code merge and are **never rewritten by the model**, so owners, deadlines and evidence cannot drift. If the provider rejects a request as too large, the part size is halved once.
+- **Long meetings:** the minutes topics, decisions, proposals and tasks all come from the code merge and are **never rewritten by the model**, so owners, deadlines and evidence cannot drift. The final LLM 2 call only writes the summary. If the provider rejects a request as too large, the part size is halved once.
 - **Prompt rules:**
   - *Decision:* clearly agreed. If changed later, keep the final one.
   - *Proposal:* suggested, parked or rejected. Never a decision.
