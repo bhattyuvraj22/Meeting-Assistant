@@ -130,7 +130,7 @@ LLM 2 reads the **refined** transcript, so terms are already corrected and its q
 
 ```mermaid
 flowchart TD
-    A["Refined transcript"] --> B{"Over 2500 words?"}
+    A["Refined transcript"] --> B{"Over 1250 words?"}
     B -->|"no"| C["LLM 2<br/>one call"]
     B -->|"yes"| D["LLM 2 per part<br/>3 segments overlap"]
     D --> E["Code merges parts<br/>and removes duplicates"]
@@ -164,7 +164,7 @@ Plain code, run after LLM 2 in a fixed order, in every profile. Every change is 
 
 ```mermaid
 flowchart TD
-    A["Record from LLM 2"] --> S1["1. Quote must exist<br/>fuzzy match at least 85<br/>same numbers and negations"]
+    A["Record from LLM 2"] --> S1["1. Quote must exist<br/>fuzzy match at least 80<br/>same numbers and negations"]
     S1 --> S2["2. Timestamps come from code<br/>found by locating the quote"]
     S2 --> S3["3. Owner must be named<br/>within 2 lines of the task"]
     S3 --> S4["4. Deadline must be spoken<br/>no invented dates or years"]
@@ -210,7 +210,7 @@ Each run writes `outputs/<date>_<time>_<id>/`. The Markdown and JSON agree by co
 | `local`, `local-docker` | faster-whisper `large-v3` | Ollama `gpt-oss:20b` | Ollama `qwen3:14b` |
 | `cpu-lite`, `cpu-lite-docker` | faster-whisper `small` | Ollama `qwen3:4b` | Ollama `llama3.2:3b` |
 
-**Key settings** (`config.yaml`, unknown keys are rejected at startup): `refine_max_words` 700, `evidence_threshold` 85, `minutes_part_words` 2500, `dedupe_threshold` 90, `min_words_per_minute` 20, `keep_runs` 20.
+**Key settings** (`config.yaml`, unknown keys are rejected at startup): `refine_max_words` 700, `evidence_threshold` 80, `minutes_part_words` 1250, `dedupe_threshold` 90, `min_words_per_minute` 20, `keep_runs` 20.
 
 ---
 

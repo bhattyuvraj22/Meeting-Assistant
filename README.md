@@ -59,8 +59,8 @@ Also check:
 ## Setup (both modes)
 
 ```bash
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
+git clone https://github.com/bhattyuvraj22/Meeting-Assistant
+cd Meeting-Assistant
 cp .env.example .env          # Windows: copy .env.example .env
 mkdir -p outputs              # Linux/macOS only
 ```
@@ -239,7 +239,7 @@ python app.py            # choose your profile in the dropdown, or: python cli.p
 
 ```bash
 pip install -r requirements-dev.txt
-ruff check . && pytest -q
+pytest -q
 ```
 
 The tests use fake models, so they need no API key. GitHub Actions runs them on every push.

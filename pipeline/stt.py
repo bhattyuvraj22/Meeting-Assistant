@@ -36,7 +36,7 @@ def transcribe(wav_path, cfg, glossary="", work_dir=".", client=None):
         return _api(wav_path, cfg, glossary, work_dir, client)
     raise ConfigError(f"Unknown stt backend '{backend}' (use 'local' or 'api').")
 
-# check fast-whisper is installed or not,nand loads model .
+# check fast-whisper is installed or not, and loads model .
 def _local(wav_path, cfg, glossary):
     try:
         from faster_whisper import WhisperModel
